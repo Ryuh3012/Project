@@ -1,6 +1,5 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination, Textarea, Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure } from "@nextui-org/react";
 import { UserFormulario } from "../security/userFormulario";
-import { Input } from "../components/Input";
 import { useState } from "react";
 import { Nav } from "../../Nav";
 
@@ -109,7 +108,7 @@ export const Demandas = () => {
                                 <ModalBody>
                                     <form onSubmit={submit}>
                                         <div className="flex flex-col">
-                                            <Input
+                                            <input
                                                 label='Cedula'
                                                 type="text"
                                                 name="id"
@@ -117,8 +116,8 @@ export const Demandas = () => {
                                                 placeholder="Introduce tu cedula"
                                                 onChange={handleChange}
                                             />
-                                            <Input
-                                                label='Fecha de Inicio'
+                                            <input
+                                                
                                                 id="date"
                                                 type="date"
                                                 name="date"
@@ -127,7 +126,7 @@ export const Demandas = () => {
                                                 onChange={handleChange}
                                             />
                                             <div>
-                                                <label htmlFor="phone">Estatus</label>
+                                                <label htmlFor="status">Estatus</label>
                                                 <select
                                                     className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
                                                     name="status"
