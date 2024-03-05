@@ -1,47 +1,53 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination, Textarea, Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure } from "@nextui-org/react";
-import { UserFormulario } from "../security/userFormulario";
-import { useState } from "react";
-import { Nav } from "../../Nav";
+import { useFormik } from "formik";
 
 const DateDocuments = [];
 
 export const Demandas = () => {
-    const [date, setDate] = useState(DateDocuments)
-    const [fomurlario, handleChange, reset] = UserFormulario({
-        DateDocuments:{
+    const validate = (values) => {
+        let errors = {}
+        values.id.toString().replace(/[^0-9]*$/, '')
+        if (!values.id) errors.id = 'La Cedula Muy Corta'
+        if (!values.startDate) errors.startDate = 'Debe Tener Una Fecha Inicial'
+        if (!values.typeCase) errors.typeCase = 'Debe Seleccionar El Tipo De Caso'
+        if (!values.lawyer) errors.lawyer = 'Debe Seleccionar Un abogado'
+        if (!values.detail) errors.detail = 'Debe Poner El Detalle Del caso'
+        if (!values.status) errors.status = 'Debe Selecionar Un Estatus'
 
+        return errors
+    }
+    const formik = useFormik({
+        initialValues: {
             id: '',
-            name: '',
-            date: '',
-            typeContract: '',
+            startDate: '',
+            endDatete: '',
+            typeCase: '',
+            lawyer: '',
+            detail: '',
             status: '',
-            detalles: ''
-        }
+        },
+        onSubmit: (value, { resetForm }) => {
+            DateDocuments.push(value)
+            return resetForm()
+        },
+        validate,
     })
 
-    const submit = (e) => {
-        e.preventDefault()
-        setDate([
-            ...date,
-            fomurlario
-        ])
-        reset(e)
-    }
     const columns = [
         {
             key: "id",
             label: "Clientes",
         },
         {
-            key: "name",
+            key: "lawyer",
             label: "Abogado",
         },
         {
-            key: "date",
-            label: "Fecha",
+            key: "startDate",
+            label: "Fecha Inicial",
         },
         {
-            key: "typeContract",
+            key: "typeCase",
             label: "tipo De Caso",
         },
         {
@@ -56,132 +62,163 @@ export const Demandas = () => {
     ];
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     return (
-        <Nav>
-            <div className="p-10 flex flex-col gap-6">
-                <div className="bg-white rounded-[5px] shadow-md p-5 w-full border-[1px] border-[#C4CEDC]">
-                    <p className="text-[30px] font-semibold mb-5">Listado De Casos</p>
-                    <div className="flex justify-end">
-                        <Button onPress={onOpen} className="bg-[#1F2559] text-white rounded-[5px] px-4 py-2  font-semibold flex justify-center items-center">Crear</Button>
-                    </div>
-                    <Table
-                        shadow="none"
-                        aria-label="Example table with client side pagination"
-                        bottomContent={
-                            <div className="flex w-full justify-center">
-                                <Pagination
-                                    isCompact
-                                    showControls
-                                    showShadow
-                                    color="secondary"
-
-                                />
-                            </div>
-                        }
-                        classNames={{
-                            wrapper: "min-h-[222px]",
-                        }}
-                    >
-
-                        <TableHeader columns={columns}>
-                            {(column) => <TableColumn className="text-left bg-[#1F2559] text-white  px-3" key={column.key}>{column.label}</TableColumn>}
-                        </TableHeader>
-                        <TableBody items={date}>
-                            {date.map(item => (
-                                <TableRow key={item.key}>
-                                    {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
-                                </TableRow>
-                            ))
-                        /* {(} */}
-                        </TableBody>
-                    </Table>
-
+        <div className="p-10 flex flex-col gap-6">
+            <div className="bg-white rounded-[5px] shadow-md p-5 w-full border-[1px] border-[#C4CEDC]">
+                <p className="text-[30px] font-semibold mb-5">Listado De Casos</p>
+                <div className="flex justify-end">
+                    <Button onPress={onOpen} className="bg-[#1F2559] text-white rounded-[5px] px-4 py-2  font-semibold flex justify-center items-center">Crear</Button>
                 </div>
-                <Modal
-                    isOpen={isOpen}
-                    onOpenChange={onOpenChange}
-                    placement="top-center"
+                <Table
+                    shadow="none"
+                    aria-label="Example table with client side pagination"
+                    bottomContent={
+                        <div className="flex w-full justify-center">
+                            <Pagination
+                                isCompact
+                                showControls
+                                showShadow
+                                color="secondary"
+
+                            />
+                        </div>
+                    }
+                    classNames={{
+                        wrapper: "min-h-[222px]",
+                    }}
                 >
-                    <ModalContent>
-                        {(onClose) => (
-                            <>
-                                <ModalHeader className="flex justify-center gap-1">Registro De Caso</ModalHeader>
-                                <ModalBody>
-                                    <form onSubmit={submit}>
-                                        <div className="flex flex-col">
+
+                    <TableHeader columns={columns}>
+                        {(column) => <TableColumn className="text-left bg-[#1F2559] text-white  px-3" key={column.key}>{column.label}</TableColumn>}
+                    </TableHeader>
+                    <TableBody items={DateDocuments}>
+                        {DateDocuments.map(item => (
+                            <TableRow key={item.key}>
+                                {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                            </TableRow>
+                        ))
+                        }
+                    </TableBody>
+                </Table>
+
+            </div>
+            <Modal
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                placement="top-center"
+            >
+                <ModalContent>
+                    {(onClose) => (
+                        <div className="bg-[#d9dbe0]">
+                            <ModalHeader className="flex justify-center gap-1">Registro De Caso</ModalHeader>
+                            <ModalBody>
+                                <form onSubmit={formik.handleSubmit}>
+                                    {formik.touched.id && formik.errors.id ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.id}</p> : null}
+                                    {formik.touched.startDate && formik.errors.startDate ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.startDate}</p> : null}
+                                    {formik.touched.typeCase && formik.errors.typeCase ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.typeCase}</p> : null}
+                                    {formik.touched.lawyer && formik.errors.lawyer ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.lawyer}</p> : null}
+                                    {formik.touched.detail && formik.errors.detail ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.detail}</p> : null}
+                                    {formik.touched.state && formik.errors.state ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.state}</p> : null}
+
+                                    <div className='flex gap-3 items-center'>
+                                        <div className="flex flex-col w-full gap-2">
+                                            <label htmlFor="nombre">Cedula</label>
                                             <input
-                                                label='Cedula'
-                                                type="text"
-                                                name="id"
-                                                inputMode="text"
-                                                placeholder="Introduce tu cedula"
-                                                onChange={handleChange}
+                                                className="w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]"
+                                                id="id"
+                                                {...formik.getFieldProps('id')}
+                                                inputMode="numeric"
+                                                placeholder="Introduce tu cédula"
                                             />
+                                        </div>
+
+                                    </div>
+                                    <div className="flex w-full gap-3">
+                                        <div className='flex flex-col w-full gap-2'>
+                                            <label htmlFor="lastName">Fecha Inicial</label>
                                             <input
-                                                
-                                                id="date"
+                                                className="w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]"
+                                                id="startDate"
                                                 type="date"
-                                                name="date"
                                                 inputMode="text"
                                                 placeholder="Introduce tu cedula"
-                                                onChange={handleChange}
+                                                {...formik.getFieldProps('startDate')}
                                             />
-                                            <div>
-                                                <label htmlFor="status">Estatus</label>
-                                                <select
-                                                    className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
-                                                    name="status"
-                                                    id="status"
-                                                    defaultValue={'activo'}
-                                                    onChange={handleChange}>
-                                                    <option value={'activo'}>Activo</option>
-                                                    <option value={'finalizado'}>Finalizado</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label htmlFor="gender">Tipo De Caso</label>
-                                                <select
-                                                    className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
-                                                    name="typeContract"
-                                                    id="typeContract"
-                                                    defaultValue={'demandado'}
-                                                    onChange={handleChange}>
-                                                    <option value={'demandado'}>Demandado</option>
-                                                    <option value={'denunciante'}>Denunciante</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label htmlFor="gender">Abogado</label>
-                                                <select
-                                                    className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
-                                                    name="name"
-                                                    id="name"
-                                                    defaultValue={''}
-                                                    onChange={handleChange}>
-                                                    <option value={'Juan'}>Juan</option>
-                                                    <option value={'pedro'}>pedro</option>
-                                                </select>
-                                            </div>
+                                        </div>
+                                        <div className='flex flex-col w-full gap-2'>
+                                            <label htmlFor="endDatete">Fecha Final</label>
+                                            <input
+                                                className="w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]"
+                                                id="endDatete"
+                                                type="date"
+                                                placeholder="Introduce tu cedula"
+                                                {...formik.getFieldProps('endDatete')}
+                                            />
+                                        </div>
+
+                                    </div>
+
+
+                                    <div className='flex flex-col w-full gap-2'>
+                                        <label htmlFor="typeCase">Tipo De Caso</label>
+                                        <select
+                                            className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
+                                            {...formik.getFieldProps('typeCase')}
+                                        >
+                                            <option value={''}></option>
+                                            <option value={'demandado'}>Demandado</option>
+                                            <option value={'denunciante'}>Denunciante</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+
+                                    </div>
+                                    <div className="flex flex-col w-full gap-2">
+                                        <div>
+                                            <label htmlFor="abogado">Abogado</label>
+                                            <select
+                                                className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
+                                                id="lawyer"
+                                                {...formik.getFieldProps('lawyer')}
+                                            >
+                                                <option value={''}></option>
+                                                <option value={'Juan'}>Juan</option>
+                                                <option value={'pedro'}>pedro</option>
+                                            </select>
                                         </div>
                                         <div>
-                                            <Textarea
-                                                isRequired
-                                                label="Detalles Del Caso"
-                                                labelPlacement="outside"
-                                                placeholder="Enter your description"
-                                                className=""
-                                                name='detalles'
-                                                id='detalles'
-                                                onChange={handleChange} />
+                                            <label htmlFor="status">Estatus</label>
+                                            <select
+                                                className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
+                                                id="status"
+                                                {...formik.getFieldProps('status')}
+                                            >
+                                                <option value={''}></option>
+                                                <option value={'activo'}>Activo</option>
+                                                <option value={'finalizado'}>Finalizado</option>
+                                            </select>
                                         </div>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="detail">Detalles Del Caso</label>
+                                        <Textarea
+                                            isRequired
+                                            id='detail'
+                                            labelPlacement="outside"
+                                            placeholder="Ingresa tu descripción"
+                                            {...formik.getFieldProps('detail')}
+                                        />
+                                    </div>
+                                    <div className="flex gap-2 m-[10px] justify-end items-center" >
                                         <Button color="danger" variant="flat" onPress={onClose}>Close</Button>
                                         <Button type='submit' color="primary" onPress={onClose}>Sign in</Button>
-                                    </form>
-                                </ModalBody>
-                            </>
-                        )}
-                    </ModalContent>
-                </Modal>
-            </div >
-        </Nav>
+                                    </div>
+                                </form>
+                            </ModalBody>
+                        </div>
+                    )}
+                </ModalContent>
+            </Modal>
+        </div >
     );
 }
