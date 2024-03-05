@@ -2,6 +2,7 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Avatar } from "@nextui-org/react";
 import { Expedientes } from "./page/Expedientes/Expedientes";
 import { Hola } from "./page/Expedientes/Hola";
+import { Demandas } from "./page/Demandas/Demandas";
 
 
 
@@ -33,7 +34,8 @@ export const Navigation = () => {
                 </NavbarContent>
             </Navbar>
             {/* <Hola></Hola> */}
-            <Expedientes></Expedientes>
+            {/* <Expedientes></Expedientes> */}
+            <Demandas></Demandas>
         </div>
     )
 }
