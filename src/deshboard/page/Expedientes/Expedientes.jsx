@@ -17,7 +17,7 @@ export const Expedientes = () => {
         if (!values.phone) errors.phone = 'Requiere Correo'
         if (!values.gender) errors.gender = 'Debe Eligir Un sexo'
         if (!values.date) errors.date = 'Debes Poner Una Fecha'
-        if (values?.date < dia && mes && año) errors.date = 'Fecha Incorrecta'
+        // if (values?.date < dia && mes && año) errors.date = 'Fecha Incorrecta'
         return errors
     }
     const formik = useFormik({
