@@ -1,8 +1,9 @@
 import React from 'react';
-import { Navigation } from './deshboard/Navigation';
+import { Navigation } from './Navigation';
+
 
 export const App = () => {
   return (
-    <Navigation></Navigation>
+    <Navigation />
   );
 }
