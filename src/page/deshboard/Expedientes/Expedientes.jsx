@@ -1,16 +1,34 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination, Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure } from "@nextui-org/react";
 import { Axios } from "axios";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
+import { useState } from "react";
 
-const users = [];
+
+const users = []
+
+const initialValues = {
+    id: '',
+    name: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    employment: '',
+    gender: '',
+    cargo: '',
+    typeContract: '',
+    speciality: '',
+    date: '',
+}
 export const Expedientes = () => {
     const hoy = new Date();
     const dia = hoy.getDate();
     const mes = hoy.getMonth() + 1; // Añadimos 1 para normalizar el valor del mes
     const año = hoy.getFullYear();
+
+    const [state, setstate] = useState(users);
     const validate = (values) => {
         let errors = {}
-        values.id.toString().replace(/[^0-9]*$/, '')
+        if (!values.id.toString().replace(/[^0-9]*$/, '')) errors.id = 'no se permite letras'
         if (!values.name) errors.name = 'Requiere Nombre'
         if (!values.id) errors.id = 'La Cedula Muy Corta'
         if (!values.email) errors.email = 'Requiere Correo'
@@ -18,31 +36,32 @@ export const Expedientes = () => {
         if (!values.phone) errors.phone = 'Requiere Correo'
         if (!values.gender) errors.gender = 'Debe Eligir Un sexo'
         if (!values.date) errors.date = 'Debes Poner Una Fecha'
-        // if (values?.date < dia && mes && año) errors.date = 'Fecha Incorrecta'
+        if (values?.date === dia && mes && año) errors.date = 'Fecha Incorrecta'
         return errors
     }
     const formik = useFormik({
-        initialValues: {
-            typeContract: '',
-            cargo: '',
-            speciality: '',
-            id: '',
-            name: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            employment: '',
-            gender: '',
-            date: '',
-        },
+        initialValues,
         onSubmit: async (values, { resetForm }) => {
-            users.push(values)
-            await Axios.post('http://localhost:3000/create', values)
+            setstate(users.push(values))
+            // await Axios.post('http://localhost:3000/create', values)
             return resetForm()
         },
         validate,
     })
     const columns = [
+        {
+            key: "id",
+            label: "Cedula",
+        },
+
+        {
+            key: "name",
+            label: "Nombre",
+        },
+        {
+            key: "phone",
+            label: "telefono",
+        },
         {
             key: "typeContract",
             label: "Tipo De contrato",
@@ -56,58 +75,45 @@ export const Expedientes = () => {
             label: "Especialidad",
         },
         {
-            key: "id",
-            label: "id",
-        },
-
-        {
-            key: "name",
-            label: "nombre",
-        },
-        {
             key: "date",
             label: "Fecha",
         },
-        {
-            key: "phone",
-            label: "telefono",
-        },
     ];
-    const tipoContratos = [{
+    // const tipoContratos = [{
 
-        Departamento: [
+    //     Departamento: [
 
-            {
-                especialidad: 'Planificacion',
-                cargo: [' R. Hospedaje', 'R. Alimientacion', 'R. Transporte', ' R. Humanos', 'Bitacora', 'PT']
-            },
-            {
-                especialidad: "Juridico",
-                cargo: ['Abogado', 'Asistente']
-            },
-            {
-                especialidad: "Boleto",
-                cargo: ['Venta', 'Promocio']
-            },
-            {
-                especialidad: "Control Pt",
-                cargo: ['Listin', 'Actividades', 'Incidencias']
-            },
-            {
-                especialidad: "Encuestas",
-                cargo: ['Tabulacion', 'Evaluacion']
-            },
-            {
-                especialidad: "Estadistica",
-                cargo: ['Individual', 'General']
-            },
-        ],
-        Personal: ''
-    }]
+    //         {
+    //             especialidad: 'Planificacion',
+    //             cargo: [' R. Hospedaje', 'R. Alimientacion', 'R. Transporte', ' R. Humanos', 'Bitacora', 'PT']
+    //         },
+    //         {
+    //             especialidad: "Juridico",
+    //             cargo: ['Abogado', 'Asistente']
+    //         },
+    //         {
+    //             especialidad: "Boleto",
+    //             cargo: ['Venta', 'Promocio']
+    //         },
+    //         {
+    //             especialidad: "Control Pt",
+    //             cargo: ['Listin', 'Actividades', 'Incidencias']
+    //         },
+    //         {
+    //             especialidad: "Encuestas",
+    //             cargo: ['Tabulacion', 'Evaluacion']
+    //         },
+    //         {
+    //             especialidad: "Estadistica",
+    //             cargo: ['Individual', 'General']
+    //         },
+    //     ],
+    //     Personal: ''
+    // }]
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    console.log(users)
     return (
         <div className="p-10 flex flex-col gap-6">
+            {/* {()=>(if(users.value))} */}
             <div className="bg-white rounded-[5px] shadow-md p-5 w-full border-[1px] border-[#C4CEDC]">
                 <p className="text-[30px] font-semibold mb-5">Listado De Expedientes</p>
                 <div className="flex justify-end">
@@ -164,24 +170,24 @@ export const Expedientes = () => {
                                     {formik.touched.gender && formik.errors.gender ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.gender}</p> : null}
                                     {formik.touched.phone && formik.errors.phone ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.phone}</p> : null}
                                     {formik.touched.date && formik.errors.date ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.date}</p> : null}
-                                    <div>
+                                    <div className="flex flex-col w-full gap-2">
                                         <label htmlFor="status">Tipo De contrato</label>
                                         <select
                                             className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
                                             name="typeContract"
-                                            id="typeContract"
-                                            defaultValue={''}
                                             {...formik.getFieldProps('typeContract')}
                                         >
-                                            {tipoContratos.map((e) => (
+                                            <option value=""></option>
+                                            <option value="personal">Personal</option>
+                                            <option value="departementos">Departamento</option>
+                                            {/* {tipoContratos.map((e) => (
                                                 // <option key={e}>{Object.keys(e)} </option>
                                                 <option key={e[1]}> {Object.keys(e).flat()[0]}</option>
-                                            ))}
+                                            ))} */}
                                         </select>
                                     </div>
-                                    <div className="flex justify-between gap-3">
-
-                                        <div>
+                                    {formik.touched.typeContract === 'departementos' ? <div className='flex gap-3 items-center'>
+                                        <div className="flex flex-col w-full gap-2">
                                             <label htmlFor="status">Especialidad</label>
                                             <select
                                                 className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
@@ -193,8 +199,7 @@ export const Expedientes = () => {
 
                                             </select>
                                         </div>
-
-                                        <div>
+                                        <div className='flex flex-col w-full gap-2'>
                                             <label htmlFor="status">Cargo</label>
                                             <select
                                                 className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
@@ -207,8 +212,8 @@ export const Expedientes = () => {
 
                                             </select>
                                         </div>
+                                    </div> : null}
 
-                                    </div>
                                     <div className='flex gap-3 items-center'>
                                         <div className="flex flex-col w-full gap-2">
                                             <label htmlFor="nombre">Nombre</label>
@@ -237,7 +242,7 @@ export const Expedientes = () => {
                                                 id="email"
                                                 inputMode="email"
                                                 {...formik.getFieldProps('email')}
-                                                placeholder="Introduce tu Correo"                                                {...formik.getFieldProps('email')}
+                                                placeholder="Introduce tu Correo"
                                             />
                                         </div>
 
@@ -263,6 +268,7 @@ export const Expedientes = () => {
                                             {...formik.getFieldProps('id')}
                                             inputMode="numeric"
                                             placeholder="Introduce tu cédula"
+                                        // pattern={/[^0-9]*$/}
                                         />
                                     </div>
 
