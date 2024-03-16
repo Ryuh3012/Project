@@ -1,10 +1,11 @@
+CREATE DATABASE modulo;  
+    
+    
     CREATE TABLE users(
         idUser serial PRIMARY KEY not null,
-        cedula VARCHAR(45) NOT NULL,
+        cedula VARCHAR(45) UNIQUE NOT NULL,
         nombre VARCHAR(500) NOT NULL,
         apellido VARCHAR(500) NOT NULL,
-        segundoNombre VARCHAR(500) NOT NULL,
-        segundoApellido VARCHAR(500) NOT NULL,
         telefono VARCHAR(11) NOT NULL,
         email VARCHAR(700) NOT NULL,
         direccion VARCHAR(500) NOT NULL,
@@ -77,6 +78,10 @@
         departamento VARCHAR(100) NOT NULL
     )
 
+    INSERT INTO public.gender( gender)
+        VALUES ( 'Masculino'),( 'Femenino');
 
+    INSERT INTO public.departments(departamento)
+        VALUES ( 'Planificacion'), ( 'Juridico'), ( 'Control Pt'), ( 'Encuestas'), ( 'Estadistica');
 
 

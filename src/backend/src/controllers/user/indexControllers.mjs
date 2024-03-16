@@ -12,18 +12,20 @@ const pool = new Pool({
 export const createUser = async (req, res) => {
 
     try {
-        const { cedula, nombre, apellido, segundoNombre, segundoApellido, telefono, email, direccion } = req.body;
+        const { cedula, nombre, apellido, telefono, email, direccion, genderid, departmentid } = req.body;
+
+
         const respon = await pool.query(
-            "INSERT INTO users( cedula, nombre, apellido, segundoNombre, segundoApellido, telefono, email, direccion ) VALUES ($1, $2, $3,$4,$5,$6,$7,$8)", [cedula, nombre, apellido, segundoNombre, segundoApellido, telefono, email, direccion]
+            "INSERT INTO users( cedula, nombre, apellido, telefono, email, direccion, genderid, departmentid ) VALUES ($1, $2, $3,$4,$5,$6,$7, $8)", [cedula, nombre, apellido, telefono, email, direccion,genderid, departmentid]
         );
 
         console.log(respon);
         res.json({
-            message: "user Add Succesfully",
+            message: "usuario agregado exitosamente",
             body: {
                 user: {
-                    cedula, nombre, apellido, segundoNombre, segundoApellido, telefono, email, direccion
-                },
+                    cedula, nombre, apellido,  telefono, email, direccion
+                }
             },
         });
     } catch (error) {
@@ -46,8 +48,8 @@ export const getUser = async (req, res) => {
 
 export const getConsul = async (req, res) => {
     try {
-        const id = req.params.id;
-        const respon = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+        const cedula = req.params.cedula;
+        const respon = await pool.query("SELECT * FROM users WHERE cedula = $1", [cedula]);
         res.json(respon.rows);
     } catch (error) {
         console.log(error);
@@ -56,9 +58,9 @@ export const getConsul = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     try {
-        const id = req.params.id;
-        const respon = await pool.query("delete from users where id= $1", [id]);
-        res.json(`User ${id} deletd successfull`);
+        const cedula = req.params.cedula;
+        const respon = await pool.query("delete from users where cedula= $1", [cedula]);
+        res.json(`Usuario ${cedula} eliminado exitosamente`);
     } catch (error) {
         console.log(error);
     }
@@ -66,17 +68,17 @@ export const deleteUser = async (req, res) => {
 
 export const UpdateUser = async (req, res) => {
     try {
-        const id = req.params.idUser;
+        const cedula = req.params.cedula;
         const {
-            name,
+            nombre,
             email
         } = req.body;
         const respon = await pool.query(
-            "UPDATE users SET name = $1, email = $2 WHERE id = $3",
-            [name, email, id]
+            "UPDATE users SET nombre = $1, email = $2 WHERE cedula = $3",
+            [nombre, email, cedula]
         );
         console.log(respon);
-        res.json("user update");
+        res.json("actualización de usuario");
     } catch (error) {
         console.log(error);
     }

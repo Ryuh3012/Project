@@ -5,12 +5,17 @@ import contractRoute from './src/routes/contract.route.mjs'
 const app = express()
 
 //midddlewares
-app.use(express.json())
-app.use(express.urlencoded({extended:false}))
+try {
+    app.use(express.json())
+    app.use(express.urlencoded({ extended: false }))
 
-//router
-app.use(userRoute)
-app.use(casesRoute)
-app.use(contractRoute)
+    //router
+    app.use(userRoute)
+    app.use(casesRoute)
+    app.use(contractRoute)
 
-app.listen(4000)
+    app.listen(4000)
+
+} catch (error) {
+    console.log(error)
+}

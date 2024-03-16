@@ -1,7 +1,9 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination, Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure } from "@nextui-org/react";
-import { Axios } from "axios";
+import axios from "axios";
 import { useFormik } from "formik";
+import ModalInfor from "../../components/ModalInfor";
 import { useState } from "react";
+
 
 
 const users = []
@@ -12,7 +14,6 @@ const initialValues = {
     lastName: '',
     email: '',
     phone: '',
-    employment: '',
     gender: '',
     cargo: '',
     typeContract: '',
@@ -24,8 +25,6 @@ export const Expedientes = () => {
     const dia = hoy.getDate();
     const mes = hoy.getMonth() + 1; // Añadimos 1 para normalizar el valor del mes
     const año = hoy.getFullYear();
-
-    const [state, setstate] = useState(users);
     const validate = (values) => {
         let errors = {}
         if (!values.id.toString().replace(/[^0-9]*$/, '')) errors.id = 'no se permite letras'
@@ -34,20 +33,27 @@ export const Expedientes = () => {
         if (!values.email) errors.email = 'Requiere Correo'
         if (!values.lastName) errors.lastName = 'Requiere Apellido'
         if (!values.phone) errors.phone = 'Requiere Correo'
+        if (!values.phone.toString().replace(/[^0-9]*$/, '')) errors.phone = 'no se permite letras'
         if (!values.gender) errors.gender = 'Debe Eligir Un sexo'
         if (!values.date) errors.date = 'Debes Poner Una Fecha'
         if (values?.date === dia && mes && año) errors.date = 'Fecha Incorrecta'
         return errors
     }
+
     const formik = useFormik({
         initialValues,
         onSubmit: async (values, { resetForm }) => {
-            setstate(users.push(values))
-            // await Axios.post('http://localhost:3000/create', values)
-            return resetForm()
+            if(values){
+                users.push(values)
+                await axios.post('localhost:4000/users', values)
+                return resetForm()
+            }
         },
         validate,
     })
+
+
+
     const columns = [
         {
             key: "id",
@@ -79,41 +85,11 @@ export const Expedientes = () => {
             label: "Fecha",
         },
     ];
-    // const tipoContratos = [{
-
-    //     Departamento: [
-
-    //         {
-    //             especialidad: 'Planificacion',
-    //             cargo: [' R. Hospedaje', 'R. Alimientacion', 'R. Transporte', ' R. Humanos', 'Bitacora', 'PT']
-    //         },
-    //         {
-    //             especialidad: "Juridico",
-    //             cargo: ['Abogado', 'Asistente']
-    //         },
-    //         {
-    //             especialidad: "Boleto",
-    //             cargo: ['Venta', 'Promocio']
-    //         },
-    //         {
-    //             especialidad: "Control Pt",
-    //             cargo: ['Listin', 'Actividades', 'Incidencias']
-    //         },
-    //         {
-    //             especialidad: "Encuestas",
-    //             cargo: ['Tabulacion', 'Evaluacion']
-    //         },
-    //         {
-    //             especialidad: "Estadistica",
-    //             cargo: ['Individual', 'General']
-    //         },
-    //     ],
-    //     Personal: ''
-    // }]
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen, onOpen, onOpenChange } = useDisclosure(false);
+    const [info, setInfo] = useState()
+    const [userData, setUserData]= useState({})
     return (
         <div className="p-10 flex flex-col gap-6">
-            {/* {()=>(if(users.value))} */}
             <div className="bg-white rounded-[5px] shadow-md p-5 w-full border-[1px] border-[#C4CEDC]">
                 <p className="text-[30px] font-semibold mb-5">Listado De Expedientes</p>
                 <div className="flex justify-end">
@@ -313,6 +289,8 @@ export const Expedientes = () => {
                     )}
                 </ModalContent>
             </Modal>
+            <ModalInfor users={users}  close={info} isOpen={setInfo} />
+            {/* userData ={userData} setUserData={setUserData} */}
         </div >
 
     )

@@ -3,10 +3,12 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Avatar } from "@nextui-
 import { Demandas } from "./page/deshboard/Demandas/Demandas";
 import { Expedientes } from "./page/deshboard/Expedientes/Expedientes";
 import { BrowserRouter, Routes, Route, Navigate, NavLink } from "react-router-dom";
+import Hola from "./page/deshboard/Expedientes/Hola";
 
 
 
-export const Navigation = () => {
+
+const Navigation = () => {
     return (
         <BrowserRouter>
             <div className='bg-[#d9dbe0]'>
@@ -30,7 +32,7 @@ export const Navigation = () => {
                     </NavbarContent>
                     <NavbarContent justify="end">
                         <NavbarItem className="hidden lg:flex">
-                            <Avatar isBordered color="default" src="src\deshboard\page\Demanda\Demandas.jsx" />
+                            <Avatar isBordered color="default" src="https://i.pravatar.cc/150?u=a04258114e29026302d" />
                         </NavbarItem>
                     </NavbarContent>
                 </Navbar>
@@ -44,5 +46,6 @@ export const Navigation = () => {
 
     )
 }
+export default Navigation
 
 
