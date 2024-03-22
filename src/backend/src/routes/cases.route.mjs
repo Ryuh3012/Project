@@ -5,10 +5,10 @@ import { UpdateCases, createCases, deleteCases, getCases, getConsul } from '../c
 
 const router = Router()
 
-router.get('/contract', getCases)
-router.post('/contract', createCases)
-router.get('/contract/:id', getConsul)
-router.put('/contract/:id', UpdateCases)
-router.delete('/contract/:id', deleteCases)
+router.get('/cases', getCases)
+router.post('/cases', createCases)
+router.get('/cases/:id', getConsul)
+router.put('/cases/:id', UpdateCases)
+router.delete('/cases/:id', deleteCases)
 
 export default router

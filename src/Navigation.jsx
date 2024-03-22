@@ -3,7 +3,6 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Avatar } from "@nextui-
 import { Demandas } from "./page/deshboard/Demandas/Demandas";
 import { Expedientes } from "./page/deshboard/Expedientes/Expedientes";
 import { BrowserRouter, Routes, Route, Navigate, NavLink } from "react-router-dom";
-import Hola from "./page/deshboard/Expedientes/Hola";
 
 
 

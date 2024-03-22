@@ -1,10 +1,50 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination, Textarea, Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure } from "@nextui-org/react";
-import { Axios } from "axios";
+import axios from "axios";
 import { useFormik } from "formik";
+import { useState } from "react";
+import { ModalCases } from "../../components/ModalCases";
 
-const DateDocuments = [];
+
+
+const initialValues = {
+    id: '',
+    startDate: '',
+    endDatete: '',
+    typeCase: '',
+    lawyer: '',
+    detail: '',
+    status: '',
+}
+const columns = [
+    {
+        key: "id",
+        label: "Clientes",
+    },
+    {
+        key: "lawyer",
+        label: "Abogado",
+    },
+    {
+        key: "startDate",
+        label: "Fecha Inicial",
+    },
+    {
+        key: "typeCase",
+        label: "tipo De Caso",
+    },
+    {
+        key: "status",
+        label: "Estatus",
+    },
+
+    {
+        key: "edit",
+        label: "editar",
+    }
+];
 
 export const Demandas = () => {
+    const [date, setDate] = useState([]);
     const validate = (values) => {
         let errors = {}
         values.id.toString().replace(/[^0-9]*$/, '')
@@ -18,55 +58,28 @@ export const Demandas = () => {
         return errors
     }
     const formik = useFormik({
-        initialValues: {
-            id: '',
-            startDate: '',
-            endDatete: '',
-            typeCase: '',
-            lawyer: '',
-            detail: '',
-            status: '',
-        },
+        initialValues,
         onSubmit: async (value, { resetForm }) => {
-            DateDocuments.push(value)
-            await Axios.post('http://localhost:3000/contract', value)
+            const { id, startDate, endDatete, typeCase, lawyer, detail, status} = value
+            await axios.post('http://localhost:3001/case', {
+                data: {
+                    detail,
+                    typeCase
+                }
+            }).then(resp => setDate([...date, value]))
+                .catch(err => console.log(err))
             return resetForm()
         },
         validate,
     })
 
-    const columns = [
-        {
-            key: "id",
-            label: "Clientes",
-        },
-        {
-            key: "lawyer",
-            label: "Abogado",
-        },
-        {
-            key: "startDate",
-            label: "Fecha Inicial",
-        },
-        {
-            key: "typeCase",
-            label: "tipo De Caso",
-        },
-        {
-            key: "status",
-            label: "Estatus",
-        },
-
-        {
-            key: "edit",
-            label: "editar",
-        }
-    ];
+  
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [data, setData] = useState()
     return (
         <div className="p-10 flex flex-col gap-6">
             <div className="bg-white rounded-[5px] shadow-md p-5 w-full border-[1px] border-[#C4CEDC]">
-                <p className="text-[30px] font-semibold mb-5">Listado De Casos</p>
+                <p className="text-[30px] font-semibold mb-5">Listado De Demandas</p>
                 <div className="flex justify-end">
                     <Button onPress={onOpen} className="bg-[#1F2559] text-white rounded-[5px] px-4 py-2  font-semibold flex justify-center items-center">Crear</Button>
                 </div>
@@ -92,10 +105,13 @@ export const Demandas = () => {
                     <TableHeader columns={columns}>
                         {(column) => <TableColumn className="text-left bg-[#1F2559] text-white  px-3" key={column.key}>{column.label}</TableColumn>}
                     </TableHeader>
-                    <TableBody items={DateDocuments}>
-                        {DateDocuments.map(item => (
+                    <TableBody items={date}>
+                        {date.map(item => (
                             <TableRow key={item.key}>
-                                {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                                {(columnKey) => {
+                                    // if (columnKey == 'action') return <TableCell><ModalCases  close={data} isOpen={setData} /></TableCell>
+                                    return <TableCell>{getKeyValue(date, columnKey)}</TableCell>
+                                }}
                             </TableRow>
                         ))
                         }
@@ -221,6 +237,7 @@ export const Demandas = () => {
                     )}
                 </ModalContent>
             </Modal>
+            
         </div >
     );
 }

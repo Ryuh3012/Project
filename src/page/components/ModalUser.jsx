@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
-import  ico  from "./../../assets/Img/eye_2533656.png";
+import { useState } from 'react';
+import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure } from "@nextui-org/react";
+import ico from "./../../assets/Img/eye_2533656.png";
 
 
-const ModalInfor = ({users, info, setInfo}) => {
+export const ModalUsers = ({ users, info, setInfo }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = useState('md')
   const { id, name, lastName, email, phone, gender, cargo, typeContract, speciality, date } = users
@@ -17,7 +17,7 @@ const ModalInfor = ({users, info, setInfo}) => {
   return (
     <>
       <div className="flex flex-wrap gap-3">
-        <Button className='bg-white' key={size} onPress={() => handleOpen(size)}><img src={ico} className='h-10' />  </Button>
+        <Button className='bg-white' key={size} onPress={() => handleOpen(size)}> <img src={ico} className='h-10' /> </Button>
       </div>
       <Modal
 
@@ -28,11 +28,11 @@ const ModalInfor = ({users, info, setInfo}) => {
         <ModalContent className=' box-border overflow-y-auto h-[80vh] max-w-[130vh]'  >
           {(onClose) => (
             <div>
-              <ModalHeader className="flex flex-col gap-1 items-center text-3xl">Este contrato se celebra entre:</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1 items-center text-3xl font-mono">Este contrato se celebra entre:</ModalHeader>
               <ModalBody >
 
                 <p>
-                  <span className='flex flex-col gap-1 items-center p-2 text-xl'> EMPRESA CONTRATANTE</span>
+                  <span className='flex flex-col gap-1 items-center p-2 text-xl font-mono' > EMPRESA CONTRATANTE</span>
                   Nombre de la Empresa: Route <br />
                   Domicilio: Calle Los Naranjos, Nº 123
                   Apartamento 4B
@@ -41,7 +41,7 @@ const ModalInfor = ({users, info, setInfo}) => {
                   Representante Legal: Juan<br />
                 </p>
                 <p>
-                  <span className='flex flex-col gap-1 items-center p-2 text-xl'> EMPLEADO CONTRATADO</span>
+                  <span className='flex flex-col gap-1 items-center p-2 text-xl font-mono'> EMPLEADO CONTRATADO</span>
                   Cédula: {id}  <br />
                   Nombre: {name}<br />
                   Apellido: {lastName}<br />
@@ -49,17 +49,17 @@ const ModalInfor = ({users, info, setInfo}) => {
                   Teléfono: {phone}<br />
                   Género: {gender} <br />
                   Tipo de Contrato: {typeContract}<br />
-                  {typeContract == "departementos" ? <div>
-                  <p>Cargo: {cargo} </p><br/>
-                  <p>Especialista: {speciality} </p>
+                  {typeContract === "departementos" ? <div>
+                    <p>Cargo: {cargo} </p><br />
+                    <p>Especialista: {speciality} </p>
                   </div> : null}
                 </p>
                 <p>
-                  <span className='flex flex-col gap-1 items-center p-2 text-xl'>OBJETO DEL CONTRATO</span>
+                  <span className='flex flex-col gap-1 items-center p-2 text-xl font-mono'>OBJETO DEL CONTRATO</span>
 
                   El objeto de este contrato es la prestación de servicios o trabajo por parte del empleado contratado, bajo las condiciones y términos establecidos en este contrato.<br />
 
-                  <span className='flex flex-col gap-1 items-center p-2 text-xl'>OBLIGACIONES DEL EMPLEADO</span>
+                  <span className='flex flex-col gap-1 items-center p-2 text-xl font-mono'>OBLIGACIONES DEL EMPLEADO</span>
 
                   El empleado se compromete a:
                   <ul className='p-3'>
@@ -74,7 +74,7 @@ const ModalInfor = ({users, info, setInfo}) => {
                   </ul>
 
 
-                  <span className='flex flex-col gap-1 items-center p-2 text-xl'>OBLIGACIONES DE LA EMPRESA</span>
+                  <span className='flex flex-col gap-1 items-center p-2 text-xl font-mono'>OBLIGACIONES DE LA EMPRESA</span>
                   La empresa se compromete a:
                   <ul className='p-3'>
                     <li>
@@ -92,12 +92,12 @@ const ModalInfor = ({users, info, setInfo}) => {
                   </ul>
 
 
-                  <span className='flex flex-col gap-1 items-center p-2 text-xl'>TERMINACIÓN DEL CONTRATO </span>
+                  <span className='flex flex-col gap-1 items-center p-2 text-xl font-mono'>TERMINACIÓN DEL CONTRATO </span>
 
                   Este contrato puede ser terminado por cualquiera de las partes con {date} días de anticipación por escrito.<br />
 
                 </p>
-                <span className='flex flex-col gap-1 items-center p-10 text-xl'>FIRMAS</span>
+                <span className='flex flex-col gap-1 items-center p-10 text-xl font-mono'>FIRMAS</span>
                 <div className='flex gap-3 items-center '>
                   <div className="flex flex-col w-full gap-3">
                     <p>
@@ -109,14 +109,14 @@ const ModalInfor = ({users, info, setInfo}) => {
                   <div className='flex flex-col w-full gap-3'>
                     <p>
                       __________________________<br />
-                      <span className='flex flex-col '>  {name}{lastName} </span>
+                      <span className='flex flex-col font-mono'>  {name}{lastName} </span>
                       Empleado Contratado
                     </p>
 
                   </div>
                 </div>
 
-                <div className='flex flex-col gap-1 items-end p-2 text-sm'>
+                <div className='flex flex-col gap-1 items-end p-2 text-sm '>
                   Fecha: {date}
                 </div>
 
@@ -128,5 +128,3 @@ const ModalInfor = ({users, info, setInfo}) => {
     </>
   );
 }
-
-export default ModalInfor;

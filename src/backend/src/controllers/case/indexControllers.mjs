@@ -12,7 +12,7 @@ const pool = new Pool({
 export const createCases = async (req, res) => {
 
     try {
-        const { detallesDelCaso,tipoDeCaso } = req.body;
+        const { detallesDelCaso,tipoDeCaso } = req.body?.data;
         const respon = await pool.query(
             "INSERT INTO cases( detallesDelCaso,tipoDeCaso ) VALUES ($1, $2)", [detallesDelCaso,tipoDeCaso]
         );
@@ -69,7 +69,7 @@ export const UpdateCases = async (req, res) => {
         const id = req.params.id;
         const {
             detallesDelCaso,tipoDeCaso
-        } = req.body;
+        } = req.body?.data;
         const respon = await pool.query(
             "UPDATE cases SET detallesDelCaso = $1, tipoDeCaso = $2 WHERE id = $3",
             [detallesDelCaso,tipoDeCaso, id]

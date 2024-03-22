@@ -12,7 +12,7 @@ const pool = new Pool({
 export const createContract = async (req, res) => {
 
     try {
-        const { tipoDeContrato, estatus, fechaIniciada } = req.body;
+        const { tipoDeContrato, estatus, fechaIniciada } = req.body?.data;
         const respon = await pool.query(
             "INSERT INTO contracts( tipoDeContrato, estatus, fechaIniciada ) VALUES ($1, $2, $3)", [tipoDeContrato, estatus, fechaIniciada]
         );
@@ -67,7 +67,7 @@ export const deleteContract = async (req, res) => {
 export const UpdateContract = async (req, res) => {
     try {
         const id = req.params.id;
-        const { tipoDeContrato, estatus, fechaIniciada } = req.body;
+        const { tipoDeContrato, estatus, fechaIniciada } = req.body?.data;
         const respon = await pool.query("UPDATE contracts SET tipoDeContrato = $1, estatus = $2  fechaIniciada = $3 WHERE id= $4", [tipoDeContrato, estatus, fechaIniciada, id]);
         console.log(respon);
         res.json("Contract update");

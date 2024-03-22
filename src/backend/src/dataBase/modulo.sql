@@ -1,16 +1,15 @@
 CREATE DATABASE modulo;  
     
     
-    CREATE TABLE users(
+ CREATE TABLE users(
         idUser serial PRIMARY KEY not null,
         cedula VARCHAR(45) UNIQUE NOT NULL,
         nombre VARCHAR(500) NOT NULL,
         apellido VARCHAR(500) NOT NULL,
         telefono VARCHAR(11) NOT NULL,
         email VARCHAR(700) NOT NULL,
-        direccion VARCHAR(500) NOT NULL,
         genderiD INT NOT NULL,
-        departmentId INT NOT NULL
+        departmentId INT
     );
 
     CREATE TABLE gender(
@@ -49,19 +48,14 @@ CREATE DATABASE modulo;
     );
 
 
-    CREATE TABLE clients (
-        idclient SERIAL PRIMARY KEY not null,
-        fechaDeRegistro DATE NOT NULL,
-        user_iduser INT NOT NULL
-    );
-
     CREATE TABLE contracts (
         idcontract SERIAL PRIMARY KEY not null,
         tipoDeContrato VARCHAR(45) NOT NULL,
         estatus VARCHAR(45) NOT NULL,
         fechaIniciada DATE NOT NULL,
-        client_idclient INT NOT NULL,
-        client_user_iduser INT NOT NULL
+        user_idusers INT NOT NULL,
+        user_gender INT NOT NULL,
+        user_departamentsid INT NOT NULL
     );
 
     CREATE TABLE contract_has_cases (
