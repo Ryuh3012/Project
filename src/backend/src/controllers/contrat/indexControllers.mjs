@@ -12,9 +12,9 @@ const pool = new Pool({
 export const createContract = async (req, res) => {
 
     try {
-        const { tipoDeContrato, estatus, fechaIniciada } = req.body?.data;
-        const respon = await pool.query(
-            "INSERT INTO contracts( tipoDeContrato, estatus, fechaIniciada ) VALUES ($1, $2, $3)", [tipoDeContrato, estatus, fechaIniciada]
+        const { tipodecontrato,  fechainiciada } = req.body;
+        const respon = await pool.query( 
+            "INSERT INTO contracts(tipodecontrato, fechainiciada) VALUES ($1, $2)", [tipodecontrato, fechainiciada]
         );
 
         console.log(respon);
@@ -22,7 +22,7 @@ export const createContract = async (req, res) => {
             message: "Contract Add Succesfully",
             body: {
                 Contract: {
-                    tipoDeContrato, estatus, fechaIniciada
+                    tipodecontrato, fechainiciada
                 },
             },
         });
@@ -67,8 +67,8 @@ export const deleteContract = async (req, res) => {
 export const UpdateContract = async (req, res) => {
     try {
         const id = req.params.id;
-        const { tipoDeContrato, estatus, fechaIniciada } = req.body?.data;
-        const respon = await pool.query("UPDATE contracts SET tipoDeContrato = $1, estatus = $2  fechaIniciada = $3 WHERE id= $4", [tipoDeContrato, estatus, fechaIniciada, id]);
+        const { tipoDeContrato,fechaIniciada } = req.body?.data;
+        const respon = await pool.query("UPDATE contracts SET tipoDeContrato = $1,  fechaIniciada = $3 WHERE id= $4", [tipoDeContrato, fechaIniciada, id]);
         console.log(respon);
         res.json("Contract update");
     } catch (error) {

@@ -51,11 +51,10 @@ CREATE DATABASE modulo;
     CREATE TABLE contracts (
         idcontract SERIAL PRIMARY KEY not null,
         tipoDeContrato VARCHAR(45) NOT NULL,
-        estatus VARCHAR(45) NOT NULL,
         fechaIniciada DATE NOT NULL,
         user_idusers INT NOT NULL,
         user_gender INT NOT NULL,
-        user_departamentsid INT NOT NULL
+        user_departamentsid INT
     );
 
     CREATE TABLE contract_has_cases (

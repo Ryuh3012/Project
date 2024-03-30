@@ -13,9 +13,9 @@ const initialValues = {
     email: ' ',
     gender: '',
     cargo: '',
-    typeContract: '',
+    tipodecontrato: '',
     speciality: '',
-    date: '',
+    fechainiciada: '',
 }
 
 const columns = [
@@ -33,7 +33,7 @@ const columns = [
         label: "telefono",
     },
     {
-        key: "typeContract",
+        key: "tipodecontrato",
         label: "Tipo De contrato",
     },
     {
@@ -45,7 +45,7 @@ const columns = [
         label: "Especialidad",
     },
     {
-        key: "date",
+        key: "fechainiciada",
         label: "Fecha",
     },
     {
@@ -56,10 +56,10 @@ const columns = [
 export const Expedientes = () => {
 
     const [users, setUsers] = useState([])
-    const hoy = new Date();
-    const dia = hoy.getDate();
-    const mes = hoy.getMonth() + 1; // Añadimos 1 para normalizar el valor del mes
-    const año = hoy.getFullYear();
+    // const hoy = new Date();
+    // const dia = hoy.getDate();
+    // const mes = hoy.getMonth() + 1; // Añadimos 1 para normalizar el valor del mes
+    // const año = hoy.getFullYear();
 
     const validate = (values) => {
         let errors = {}
@@ -71,8 +71,8 @@ export const Expedientes = () => {
         if (!values.telefono) errors.telefono = 'Requiere Correo'
         if (!values.telefono.toString().replace(/[^0-9]*$/, '')) errors.telefono = 'no se permite letras'
         if (!values.gender) errors.gender = 'Debe Eligir Un sexo'
-        if (!values.date) errors.date = 'Debes Poner Una Fecha'
-        if (values?.date === dia && mes && año) errors.date = 'Fecha Incorrecta'
+        if (!values.fechainiciada) errors.fechainiciada = 'Debes Poner Una Fecha'
+        // if (values?.fechainiciada === dia && mes && año) errors.fechainiciada = 'Fecha Incorrecta'
         return errors
     }
 
@@ -80,7 +80,7 @@ export const Expedientes = () => {
         initialValues,
         onSubmit: async (value, { resetForm }) => {
 
-            const { cedula, nombre, apellido, telefono, email, gender } = value
+            const { cedula, nombre, apellido, telefono, email, gender, cargo, tipodecontrato, speciality, fechainiciada } = value
 
             //gei
             await axios.post('http://localhost:3001/users', {
@@ -91,12 +91,12 @@ export const Expedientes = () => {
                     apellido,
                     telefono,
                     email,
-                    gender
+                    gender,
+                    tipodecontrato,
+                    fechainiciada
                 }
             }).then(resp => setUsers([...users, value]))
                 .catch(err => console.log(err))
-            // await axios.post('http://localhost:4000/contract', typeContract, date)
-
             return resetForm()
 
         },
@@ -105,7 +105,6 @@ export const Expedientes = () => {
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure(false);
     const [info, setInfo] = useState()
-    console.log(users)
     return (
         < div className="p-10 flex flex-col gap-6" c>
             <div className="bg-white rounded-[5px] shadow-md p-5 w-full border-[1px] border-[#C4CEDC]">
@@ -140,7 +139,7 @@ export const Expedientes = () => {
                         {users.map(user => (
                             <TableRow key={user.cedula}>
                                 {(columnKey) => {
-                                    if (columnKey == 'action') return <TableCell>< ModalUsers users={users} close={info} isOpen={setInfo} /></TableCell>
+                                    if (columnKey === 'action') return <TableCell>< ModalUsers users={users} close={info} isOpen={setInfo} /></TableCell>
                                     return <TableCell>{getKeyValue(user, columnKey)}</TableCell>
                                 }}
                             </TableRow>
@@ -167,24 +166,24 @@ export const Expedientes = () => {
                                     {formik.touched.email && formik.errors.email ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.email}</p> : null}
                                     {formik.touched.gender && formik.errors.gender ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.gender}</p> : null}
                                     {formik.touched.telefono && formik.errors.telefono ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.telefono}</p> : null}
-                                    {formik.touched.date && formik.errors.date ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.date}</p> : null}
+                                    {formik.touched.fechainiciada && formik.errors.fechainiciada ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.fechainiciada}</p> : null}
                                     <div className="flex flex-col w-full gap-2">
                                         <label htmlFor="status">Tipo De contrato</label>
                                         <select
                                             className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
-                                            nombre="typeContract"
-                                            {...formik.getFieldProps('typeContract')}
+                                            nombre="tipodecontrato"
+                                            {...formik.getFieldProps('tipodecontrato')}
                                         >
                                             <option value=""></option>
-                                            <option value="personal">Personal</option>
                                             <option value="departementos">Departamento</option>
+                                            <option value="personal">Personal</option>
                                             {/* {tipoContratos.map((e) => (
                                                 // <option key={e}>{Object.keys(e)} </option>
                                                 <option key={e[1]}> {Object.keys(e).flat()[0]}</option>
                                             ))} */}
                                         </select>
                                     </div>
-                                    {formik.touched.typeContract === 'departementos' ? <div className='flex gap-3 items-center'>
+                                    {formik.touched.tipodecontrato === 'departementos' ? <div className='flex gap-3 items-center'>
                                         <div className="flex flex-col w-full gap-2">
                                             <label htmlFor="status">Especialidad</label>
                                             <select
@@ -296,7 +295,7 @@ export const Expedientes = () => {
                                                 type="date"
                                                 inputMode="text"
                                                 placeholder="Introduce tu cedula"
-                                                {...formik.getFieldProps('date')}
+                                                {...formik.getFieldProps('fechainiciada')}
                                             />
                                         </div>
 
