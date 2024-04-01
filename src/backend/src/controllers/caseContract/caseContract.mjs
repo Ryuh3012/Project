@@ -10,26 +10,34 @@ const pool = new Pool({
 });
 
 export const createCaseContract = async (req, res) => {
-
     try {
-        const { estatus, fechadeinicio, fechafinalizada } = req.body?.data;
-        const respon = await pool.query(
-            "INSERT INTO contracts( estatus, fechadeinicio, fechafinalizada ) VALUES ($1, $2, $3)", [estatus, fechadeinicio, fechafinalizada]
-        );
+        const { cedula, detallesdelcaso, tipodecaso, fechadeinicio, fechafinalizada, estatus } = req.body?.data;
 
-        console.log(respon);
-        res.json({
-            message: "Contract Add Succesfully",
+        // Buscar id de las personas
+        const userid = await pool.query('select iduser from users where cedula = $1', [cedula])
+        const genderid = await pool.query('select genderid from users where cedula = $1', [cedula])
+
+        // insertar en cada campo
+        const selectTipo = tipodecaso === 'demandado' ? 'demanda' : 'denunciado'
+        const idcases = await pool.query('INSERT INTO cases( cedula ,detallesdelcaso, tipodecaso, user_iduser, user_gender_idgender ) VALUES($1,$2,$3,$4, $5) RETURNING idcases ',
+            [cedula, detallesdelcaso, selectTipo, userid.rowCount, genderid.rowCount])
+
+        // const respon = await pool.query('INSERT INTO contract_has_cases(cases_idcases,estatus, fechadeinicio, fechafinalizada ) VALUES($1,$2,$3,$4)',
+        //     [idcases.rowCount, estatus, fechadeinicio, fechafinalizada])
+
+        return res.status(200).json({
+            message: "caso agregado exitosamente",
         });
     } catch (error) {
         console.log(error)
     }
 
-};
 
+}
 export const getCaseContract = async (req, res) => {
     try {
-        const respon = await pool.query("select * from contract_has_cases");
+        pool.connect()
+        const respon = await pool.query("select *from cases");
         return res.status(200).json({
             res: respon?.rows
         });
@@ -37,35 +45,42 @@ export const getCaseContract = async (req, res) => {
         console.log(error)
     }
 
-};
-
+}
 export const getConsul = async (req, res) => {
     try {
-        const id = req.params.id;
-        const respon = await pool.query("SELECT * FROM contract_has_cases WHERE id = $1", [id]);
+        pool.connect()
+        const cedula = req.params.cedula;
+        const respon = await pool.query("SELECT * FROM cases WHERE cedula = $1", [cedula]);
         res.json(respon.rows);
+
     } catch (error) {
         console.log(error);
     }
-};
-
+}
 export const deleteCaseContract = async (req, res) => {
     try {
-        const id = req.params.id;
-        const respon = await pool.query("delete from contract_has_cases where id= $1", [id]);
-        res.json(`contracts ${id} deletd successfull`);
+        pool.connect()
+        const cedula = req.params.cedula;
+        const respon = await pool.query("delete from cases where cedula= $1", [cedula]);
+        console.log(respon)
+        res.json(`cases ${cedula} eliminado exitosamente`);
+
     } catch (error) {
         console.log(error);
     }
 };
-
 export const UpdateCaseContract = async (req, res) => {
     try {
-        const id = req.params.id;
-        const { tipoDeContrato, estatus, fechaIniciada } = req.body?.data;
-        const respon = await pool.query("UPDATE contract_has_cases SET tipoDeContrato = $1, estatus = $2  fechaIniciada = $3 WHERE id= $4", [tipoDeContrato, estatus, fechaIniciada, id]);
+        pool.connect()
+        const cedula = req.params.cedula;
+        const { detallesdelcaso, selectTipo } = req.body;
+        const respon = await pool.query(
+            "UPDATE cases SET detallesdelcaso = $1, selectTipo = $2 WHERE cedula = $3",
+            [detallesdelcaso, selectTipo, cedula]
+        );
         console.log(respon);
-        res.json("Contract update");
+        res.json("actualización de usuario");
+
     } catch (error) {
         console.log(error);
     }

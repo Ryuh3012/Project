@@ -22,9 +22,7 @@ CREATE DATABASE modulo;
         tipoDerequisito VARCHAR(300) NOT NULL,
         contract_idcontract INT NOT NULL,
         department_iddepartment INT NOT NULL,
-        contract_idcontract1 INT NOT NULL,
-        contract_client_idclient INT NOT NULL,
-        contract_client_user_idUser INT NOT NULL
+        contract_idcontract1 INT NOT NULL
     );
 
 
@@ -40,11 +38,12 @@ CREATE DATABASE modulo;
 
     CREATE TABLE cases (
         idcases SERIAL PRIMARY KEY not null,
-        detallesDelCaso VARCHAR(500) NOT NULL,
+        cedula VARCHAR(45) UNIQUE NOT NULL,
+        detallesDelCaso VARCHAR(500),
         tipoDeCaso VARCHAR(45) NOT NULL,
         user_iduser INT NOT NULL,
         user_gender_idgender INT NOT NULL,
-        user_department_iddepartment INT NOT NULL
+        user_department_iddepartment INT 
     );
 
 
@@ -59,7 +58,7 @@ CREATE DATABASE modulo;
 
     CREATE TABLE contract_has_cases (
         idcontract_has_cases INT NOT NULL,
-        contract_idcontract INT NOT NULL,
+        contract_idcontract INT,
         cases_idcases INT NOT NULL,
         estatus VARCHAR(45) NOT NULL,
         fechaDeInicio VARCHAR(45) NOT NULL,
@@ -71,10 +70,12 @@ CREATE DATABASE modulo;
         departamento VARCHAR(100) NOT NULL
     )
 
-    INSERT INTO public.gender( gender)
+    INSERT INTO gender( gender)
         VALUES ( 'Masculino'),( 'Femenino');
 
-    INSERT INTO public.departments(departamento)
+
+
+    INSERT INTO departments(departamento)
         VALUES ( 'Planificacion'), ( 'Juridico'), ( 'Control Pt'), ( 'Encuestas'), ( 'Estadistica');
 
 

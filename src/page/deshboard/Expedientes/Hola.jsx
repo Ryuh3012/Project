@@ -1,7 +1,6 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination, Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure } from "@nextui-org/react";
 import axios from "axios";
 import { useFormik } from "formik";
-import ModalInfor from "../../components/ModalInfor";
 import { useState } from "react";
 
 
@@ -10,45 +9,36 @@ const users = []
 
 const initialValues = {
     id: '',
-    nombre: '',
-    apellido: '',
-    email: '',
-    telefono: '',
-    gender: '',
-    cargo: '',
-    typeContract: '',
-    speciality: '',
-    date: '',
+    startDate: '',
+    dataEnd: '',
+    caseType: '',
+    lawyer: '',
+    status: '',
+    datail: '',
 }
 export const Hola = () => {
-    const hoy = new Date();
-    const dia = hoy.getDate();
-    const mes = hoy.getMonth() + 1; // Añadimos 1 para normalizar el valor del mes
-    const año = hoy.getFullYear();
+
+    const [date, setDate] = useState([]);
 
     const validate = (values) => {
         let errors = {}
-        if (values === true) errors = 'create'
-        if (!values.id.toString().replace(/[^0-9]*$/, '')) errors.id = 'no se permite letras'
-        if (!values.nombre) errors.nombre = 'Requiere Nombre'
+        values.id.toString().replace(/[^0-9]*$/, '')
         if (!values.id) errors.id = 'La Cedula Muy Corta'
-        if (!values.email) errors.email = 'Requiere Correo'
-        if (!values.apellido) errors.apellido = 'Requiere Apellido'
-        if (!values.telefono) errors.telefono = 'Requiere Correo'
-        if (!values.telefono.toString().replace(/[^0-9]*$/, '')) errors.telefono = 'no se permite letras'
-        if (!values.gender) errors.gender = 'Debe Eligir Un sexo'
-        if (!values.date) errors.date = 'Debes Poner Una Fecha'
-        if (values?.date === dia && mes && año) errors.date = 'Fecha Incorrecta'
+        if (!values.startDate) errors.startDate = 'debes poner un fecha inicial'
+        if (!values.caseType) errors.caseType = 'Debes poner un caso'
+        if (!values.lawyer) errors.lawyer = 'Debes Selecionar un abogado'
+        if (!values.status) errors.status = 'Debes Selecionar el tipo de estatus'
+        if (!values.detailsofthecase) errors.detailsofthecase = 'necesitas los detalles del caso'
+
         return errors
     }
 
     const formik = useFormik({
         initialValues,
-        onSubmit: async (values, { resetForm }) => {
-            users.push(values)
-            await axios.post('localhost:4000/users', values)
+        onSubmit: async (value, { resetForm }) => {
+            setDate([...date, value])
+            
             return resetForm()
-
         },
         validate,
     })
@@ -62,12 +52,12 @@ export const Hola = () => {
         },
 
         {
-            key: "nombre",
-            label: "Nombre",
+            key: "lawyer",
+            label: "abogado",
         },
         {
-            key: "telefono",
-            label: "telefono",
+            key: "startDate",
+            label: "fecha de inicio",
         },
         {
             key: "typeContract",
@@ -282,8 +272,7 @@ export const Hola = () => {
                     )}
                 </ModalContent>
             </Modal>
-            <ModalInfor users={users} close={info} isOpen={setInfo} />
-            {/* userData ={userData} setUserData={setUserData} */}
+
         </div >
 
     )

@@ -13,7 +13,6 @@ export const createUser = async (req, res) => {
 
     try {
         pool.connect()
-        //geix2 esta pendiente de las webadas xd
         const {cedula, nombre, apellido, telefono, email, gender,tipodecontrato,  fechainiciada } = req.body?.data;
         const genderId = gender === 'masculino' ? 1 : 2
         
@@ -28,7 +27,7 @@ export const createUser = async (req, res) => {
         );
 
         console.log(respon);
-        res.status(200).json({
+        return res.status(200).json({
             message: "usuario agregado exitosamente",
         });
     } catch (error) {
