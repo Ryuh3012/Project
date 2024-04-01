@@ -57,12 +57,12 @@ CREATE DATABASE modulo;
     );
 
     CREATE TABLE contract_has_cases (
-        idcontract_has_cases INT NOT NULL,
+        idcontract_has_cases SERIAL PRIMARY KEY NOT NULL,
         contract_idcontract INT,
         cases_idcases INT NOT NULL,
         estatus VARCHAR(45) NOT NULL,
         fechaDeInicio VARCHAR(45) NOT NULL,
-        fechaFinalizada DATE NOT NULL
+        fechaFinalizada DATE
     );
 
     CREATE TABLE departments (

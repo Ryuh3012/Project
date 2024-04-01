@@ -72,7 +72,6 @@ export const Expedientes = () => {
         if (!values.telefono.toString().replace(/[^0-9]*$/, '')) errors.telefono = 'no se permite letras'
         if (!values.gender) errors.gender = 'Debe Eligir Un sexo'
         if (!values.fechainiciada) errors.fechainiciada = 'Debes Poner Una Fecha'
-        // if (values?.fechainiciada === dia && mes && año) errors.fechainiciada = 'Fecha Incorrecta'
         return errors
     }
 

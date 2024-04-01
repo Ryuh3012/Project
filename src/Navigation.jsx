@@ -37,12 +37,12 @@ const Navigation = () => {
                     </NavbarContent>
                 </Navbar>
             </div>
-            {/* <Routes>
+            <Routes>
                 <Route path="/" element={<Expedientes />} />
                 <Route path="/demandas" element={<Demandas />} />
                 <Route path="*" element={<Navigate to={'/'} replace={true} />} />
-            </Routes> */}
-            <Hola></Hola>
+            </Routes>
+            
         </BrowserRouter>
 
     )

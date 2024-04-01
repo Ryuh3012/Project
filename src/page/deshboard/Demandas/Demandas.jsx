@@ -9,11 +9,11 @@ import { ModalCases } from "../../components/ModalCases";
 const initialValues = {
     id: '',
     startDate: '',
-    dateEnded: '',
-    caseType: '',
+    endDatete: '',
+    typeCase: '',
     lawyer: '',
+    detail: '',
     status: '',
-    detailsofthecase: '',
 }
 const columns = [
     {
@@ -29,7 +29,7 @@ const columns = [
         label: "Fecha Inicial",
     },
     {
-        key: "caseType",
+        key: "typeCase",
         label: "tipo De Caso",
     },
     {
@@ -43,30 +43,36 @@ const columns = [
     }
 ];
 
+
 export const Demandas = () => {
     const [date, setDate] = useState([]);
+
     const validate = (values) => {
         let errors = {}
         values.id.toString().replace(/[^0-9]*$/, '')
         if (!values.id) errors.id = 'La Cedula Muy Corta'
         if (!values.startDate) errors.startDate = 'Debe Tener Una Fecha Inicial'
-        if (!values.caseType) errors.caseType = 'Debe Seleccionar El Tipo De Caso'
+        if (!values.typeCase) errors.typeCase = 'Debe Seleccionar El Tipo De Caso'
         if (!values.lawyer) errors.lawyer = 'Debe Seleccionar Un abogado'
-        if (!values.detailsofthecase) errors.detailsofthecase = 'Debe Poner El Detalle Del caso'
+        if (!values.detail) errors.detail = 'Debe Poner El Detalle Del caso'
         if (!values.status) errors.status = 'Debe Selecionar Un Estatus'
 
         return errors
     }
+    
     const formik = useFormik({
         initialValues,
         onSubmit: async (value, { resetForm }) => {
-            const { id, startDate, dateEnded, caseType, lawyer, status, detailsofthecase } = value
+            const { id, startDate, endDatete, typeCase, lawyer, detail, status } = value
             console.log(value)
             await axios.post('http://localhost:3001/cases', {
                 data: {
                     cedula: id,
-                    detallesdelcaso: detailsofthecase,
-                    tipodecaso: caseType,
+                    detallesdelcaso: detail,
+                    tipodecaso: typeCase,
+                    fechadeinicio: startDate,
+                    fechafinalizada: endDatete,
+                    estatus: status
                 }
             }).then(resp => setDate([...date, value]))
                 .catch(err => console.log(err))
@@ -75,9 +81,8 @@ export const Demandas = () => {
         validate,
     })
 
-
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const [data, setData] = useState()
+    const [select, setSelect] = useState()
     return (
         <div className="p-10 flex flex-col gap-6">
             <div className="bg-white rounded-[5px] shadow-md p-5 w-full border-[1px] border-[#C4CEDC]">
@@ -111,7 +116,7 @@ export const Demandas = () => {
                         {date.map(item => (
                             <TableRow key={item.key}>
                                 {(columnKey) => {
-                                    if (columnKey === 'edit') return <TableCell><ModalCases close={data} isOpen={setData} /></TableCell>
+                                    if (columnKey === 'edit') return <TableCell><ModalCases close={select} isOpen={setSelect} /></TableCell>
                                     return <TableCell>{getKeyValue(date, columnKey)}</TableCell>
                                 }}
                             </TableRow>
@@ -134,14 +139,14 @@ export const Demandas = () => {
                                 <form onSubmit={formik.handleSubmit}>
                                     {formik.touched.id && formik.errors.id ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.id}</p> : null}
                                     {formik.touched.startDate && formik.errors.startDate ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.startDate}</p> : null}
-                                    {formik.touched.typeCase && formik.errors.caseType ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.caseType}</p> : null}
+                                    {formik.touched.typeCase && formik.errors.typeCase ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.typeCase}</p> : null}
                                     {formik.touched.lawyer && formik.errors.lawyer ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.lawyer}</p> : null}
-                                    {formik.touched.detailsofthecase && formik.errors.detailsofthecase ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.detailsofthecase}</p> : null}
-                                    {formik.touched.status && formik.errors.status ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.status}</p> : null}
+                                    {formik.touched.detail && formik.errors.detail ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.detail}</p> : null}
+                                    {formik.touched.state && formik.errors.state ? <p className="bg-red-100 border border-red-400 text-red-700 px-1 rounded relative py-1"  >{formik.errors.state}</p> : null}
 
                                     <div className='flex gap-3 items-center'>
                                         <div className="flex flex-col w-full gap-2">
-                                            <label>Cedula</label>
+                                            <label htmlFor="nombre">Cedula</label>
                                             <input
                                                 className="w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]"
                                                 id="id"
@@ -154,19 +159,24 @@ export const Demandas = () => {
                                     </div>
                                     <div className="flex w-full gap-3">
                                         <div className='flex flex-col w-full gap-2'>
-                                            <label>Fecha Inicial</label>
+                                            <label htmlFor="lastName">Fecha Inicial</label>
                                             <input
                                                 className="w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]"
+                                                id="startDate"
                                                 type="date"
+                                                inputMode="text"
+                                                placeholder="Introduce tu cedula"
                                                 {...formik.getFieldProps('startDate')}
                                             />
                                         </div>
                                         <div className='flex flex-col w-full gap-2'>
-                                            <label>Fecha Final</label>
+                                            <label htmlFor="endDatete">Fecha Final</label>
                                             <input
                                                 className="w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]"
+                                                id="endDatete"
                                                 type="date"
-                                                {...formik.getFieldProps('dateEnded')}
+                                                placeholder="Introduce tu cedula"
+                                                {...formik.getFieldProps('endDatete')}
                                             />
                                         </div>
 
@@ -174,10 +184,10 @@ export const Demandas = () => {
 
 
                                     <div className='flex flex-col w-full gap-2'>
-                                        <label >Tipo De Caso</label>
+                                        <label htmlFor="typeCase">Tipo De Caso</label>
                                         <select
                                             className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
-                                            {...formik.getFieldProps('caseType')}
+                                            {...formik.getFieldProps('typeCase')}
                                         >
                                             <option value={''}></option>
                                             <option value={'demandado'}>Demandado</option>
@@ -197,14 +207,15 @@ export const Demandas = () => {
                                                 {...formik.getFieldProps('lawyer')}
                                             >
                                                 <option value={''}></option>
-                                                <option value={'juan'}>Juan</option>
+                                                <option value={'Juan'}>Juan</option>
                                                 <option value={'pedro'}>pedro</option>
                                             </select>
                                         </div>
                                         <div>
-                                            <label>Estatus</label>
+                                            <label htmlFor="status">Estatus</label>
                                             <select
                                                 className='w-full border-[1px] border-[#C4CEDC] px-5 py-2 rounded-[5px]'
+                                                id="status"
                                                 {...formik.getFieldProps('status')}
                                             >
                                                 <option value={''}></option>
@@ -214,13 +225,13 @@ export const Demandas = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label>Detalles Del Caso</label>
+                                        <label htmlFor="detail">Detalles Del Caso</label>
                                         <Textarea
                                             isRequired
-
+                                            id='detail'
                                             labelPlacement="outside"
                                             placeholder="Ingresa tu descripción"
-                                            {...formik.getFieldProps('detailsofthecase')}
+                                            {...formik.getFieldProps('detail')}
                                         />
                                     </div>
                                     <div className="flex gap-2 m-[10px] justify-end items-center" >

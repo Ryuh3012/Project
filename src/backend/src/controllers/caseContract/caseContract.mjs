@@ -19,11 +19,11 @@ export const createCaseContract = async (req, res) => {
 
         // insertar en cada campo
         const selectTipo = tipodecaso === 'demandado' ? 'demanda' : 'denunciado'
-        const idcases = await pool.query('INSERT INTO cases( cedula ,detallesdelcaso, tipodecaso, user_iduser, user_gender_idgender ) VALUES($1,$2,$3,$4, $5) RETURNING idcases ',
+        const idcases = await pool.query('INSERT INTO cases(cedula ,detallesdelcaso, tipodecaso, user_iduser, user_gender_idgender ) VALUES($1,$2,$3,$4, $5) RETURNING idcases ',
             [cedula, detallesdelcaso, selectTipo, userid.rowCount, genderid.rowCount])
 
-        // const respon = await pool.query('INSERT INTO contract_has_cases(cases_idcases,estatus, fechadeinicio, fechafinalizada ) VALUES($1,$2,$3,$4)',
-        //     [idcases.rowCount, estatus, fechadeinicio, fechafinalizada])
+        const respon = await pool.query('INSERT INTO contract_has_cases(cases_idcases,estatus, fechadeinicio, fechafinalizada ) VALUES($1,$2,$3,$4)',
+            [idcases.rowCount, estatus, fechadeinicio, fechafinalizada])
 
         return res.status(200).json({
             message: "caso agregado exitosamente",
