@@ -37,14 +37,6 @@ const columns = [
         label: "Tipo De contrato",
     },
     {
-        key: "cargo",
-        label: "Cargo",
-    },
-    {
-        key: "speciality",
-        label: "Especialidad",
-    },
-    {
         key: "fechainiciada",
         label: "Fecha",
     },
@@ -138,7 +130,7 @@ export const Expedientes = () => {
                         {users.map(user => (
                             <TableRow key={user.cedula}>
                                 {(columnKey) => {
-                                    if (columnKey === 'action') return <TableCell>< ModalUsers users={users} close={info} isOpen={setInfo} /></TableCell>
+                                    if (columnKey === 'action') return <TableCell>< ModalUsers users={[...users]} close={info} isOpen={setInfo} /></TableCell>
                                     return <TableCell>{getKeyValue(user, columnKey)}</TableCell>
                                 }}
                             </TableRow>

@@ -6,8 +6,8 @@ import ico from "./../../assets/Img/eye_2533656.png";
 export const ModalUsers = ({ users, info, setInfo }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = useState('md')
-  const { id, name, lastName, email, phone, gender, cargo, typeContract, speciality, date } = users
 
+  const { cedula, nombre, apellido, telefono, email, gender, cargo, tipodecontrato, speciality, fechainiciada } = users[0]
 
   const handleOpen = (size) => {
     setSize(size)
@@ -15,7 +15,7 @@ export const ModalUsers = ({ users, info, setInfo }) => {
   }
 
   return (
-    <>
+    <div>
       <div className="flex flex-wrap gap-3">
         <Button className='bg-white' key={size} onPress={() => handleOpen(size)}> <img src={ico} className='h-10' /> </Button>
       </div>
@@ -42,17 +42,17 @@ export const ModalUsers = ({ users, info, setInfo }) => {
                 </p>
                 <p>
                   <span className='flex flex-col gap-1 items-center p-2 text-xl font-mono'> EMPLEADO CONTRATADO</span>
-                  Cédula: {id}  <br />
-                  Nombre: {name}<br />
-                  Apellido: {lastName}<br />
-                  Correo Electrónico: {email}<br />
-                  Teléfono: {phone}<br />
-                  Género: {gender} <br />
-                  Tipo de Contrato: {typeContract}<br />
-                  {typeContract === "departementos" ? <div>
-                    <p>Cargo: {cargo} </p><br />
-                    <p>Especialista: {speciality} </p>
-                  </div> : null}
+                  Cédula: {cedula}  <br />
+                  Nombre: {nombre}<br />
+                  Apellido: {apellido} <br />
+                  Correo Electrónico: {email} <br />
+                  Teléfono: {telefono} <br />
+                  Género:  {gender} <br />
+                  Tipo de Contrato: {tipodecontrato} <br />
+                  {/* { === "departementos" ? <div>
+                    <p>Cargo:  </p><br />
+                    <p>Especialista:  </p>
+                  </div> : null} */}
                 </p>
                 <p>
                   <span className='flex flex-col gap-1 items-center p-2 text-xl font-mono'>OBJETO DEL CONTRATO</span>
@@ -94,7 +94,7 @@ export const ModalUsers = ({ users, info, setInfo }) => {
 
                   <span className='flex flex-col gap-1 items-center p-2 text-xl font-mono'>TERMINACIÓN DEL CONTRATO </span>
 
-                  Este contrato puede ser terminado por cualquiera de las partes con {date} días de anticipación por escrito.<br />
+                  Este contrato puede ser terminado por cualquiera de las partes con {fechainiciada} días de anticipación por escrito.<br />
 
                 </p>
                 <span className='flex flex-col gap-1 items-center p-10 text-xl font-mono'>FIRMAS</span>
@@ -109,7 +109,7 @@ export const ModalUsers = ({ users, info, setInfo }) => {
                   <div className='flex flex-col w-full gap-3'>
                     <p>
                       __________________________<br />
-                      <span className='flex flex-col font-mono'>  {name}{lastName} </span>
+                      <span className='flex flex-col font-mono'>  {nombre} {apellido} </span>
                       Empleado Contratado
                     </p>
 
@@ -117,7 +117,7 @@ export const ModalUsers = ({ users, info, setInfo }) => {
                 </div>
 
                 <div className='flex flex-col gap-1 items-end p-2 text-sm '>
-                  Fecha: {date}
+                  Fecha:{fechainiciada}
                 </div>
 
               </ModalBody>
@@ -125,6 +125,8 @@ export const ModalUsers = ({ users, info, setInfo }) => {
           )}
         </ModalContent>
       </Modal>
-    </>
-  );
+    </div>
+  )
 }
+
+

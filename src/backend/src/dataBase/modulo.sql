@@ -61,8 +61,7 @@ CREATE DATABASE modulo;
         contract_idcontract INT,
         cases_idcases INT NOT NULL,
         estatus VARCHAR(45) NOT NULL,
-        fechaDeInicio VARCHAR(45) NOT NULL,
-        fechaFinalizada DATE
+        fechaDeInicio VARCHAR(45) NOT NULL
     );
 
     CREATE TABLE departments (

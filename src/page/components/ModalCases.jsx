@@ -3,11 +3,12 @@ import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure } fr
 import ico from "../../assets/Img/editar.png";
 
 
-export const ModalCases = ({ DateDocuments, date, setDate }) => {
+export const ModalCases = ({ data, info, setInfo }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [size, setSize] = useState('md')
-  const { id, startDate, typeCase, lawyer, detail } = DateDocuments
+  console.log(data)
+  const { id, startDate, typeCase, lawyer, detail, status } = data[0]
 
 
   const handleOpen = (size) => {

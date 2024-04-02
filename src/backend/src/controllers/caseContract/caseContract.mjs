@@ -11,7 +11,7 @@ const pool = new Pool({
 
 export const createCaseContract = async (req, res) => {
     try {
-        const { cedula, detallesdelcaso, tipodecaso, fechadeinicio, fechafinalizada, estatus } = req.body?.data;
+        const { cedula, detallesdelcaso, tipodecaso, fechadeinicio,  estatus } = req.body?.data;
 
         // Buscar id de las personas
         const userid = await pool.query('select iduser from users where cedula = $1', [cedula])
@@ -22,8 +22,8 @@ export const createCaseContract = async (req, res) => {
         const idcases = await pool.query('INSERT INTO cases(cedula ,detallesdelcaso, tipodecaso, user_iduser, user_gender_idgender ) VALUES($1,$2,$3,$4, $5) RETURNING idcases ',
             [cedula, detallesdelcaso, selectTipo, userid.rowCount, genderid.rowCount])
 
-        const respon = await pool.query('INSERT INTO contract_has_cases(cases_idcases,estatus, fechadeinicio, fechafinalizada ) VALUES($1,$2,$3,$4)',
-            [idcases.rowCount, estatus, fechadeinicio, fechafinalizada])
+        const respon = await pool.query('INSERT INTO contract_has_cases(cases_idcases, estatus, fechadeinicio ) VALUES($1,$2,$3)',
+            [idcases.rowCount, estatus, fechadeinicio])
 
         return res.status(200).json({
             message: "caso agregado exitosamente",
